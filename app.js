@@ -28,10 +28,10 @@ connectDB();
 app.use(express.json({ limit: '100mb' })); // Ajusta el límite según el tamaño de las solicitudes esperadas
 app.use(express.urlencoded({ limit: '100mb', extended: true }));
 // Rutas
-app.use('/api/trakingoperaciones', TrakingOperacionesDeCasosRoutes);  // KardexDB ---> comision
-app.use('/api/comision', comisionRoutes); // KardexDB ---> comision
-app.use('/api/multas', multaRoutes); // KardexDB ---> comision
-app.use('/api/attendance', attendanceRoutes); // KardexDB ---> Asistencia
+app.use('/api/users/trakingoperaciones', TrakingOperacionesDeCasosRoutes);  // KardexDB ---> comision
+app.use('/api/users/comision', comisionRoutes); // KardexDB ---> comision
+app.use('/api/users/multas', multaRoutes); // KardexDB ---> comision
+app.use('/api/users/attendance', attendanceRoutes); // KardexDB ---> Asistencia
 
 // const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
