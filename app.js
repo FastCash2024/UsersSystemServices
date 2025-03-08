@@ -7,6 +7,7 @@ import TrakingOperacionesDeCasosRoutes from './src/routes/TrakingOperacionesDeCa
 import multaRoutes from './src/routes/multaRoutes.js';
 import attendanceRoutes from './src/routes/attendanceRoutes.js';
 import comisionRoutes from './src/routes/comisionRoutes.js';
+import applicationsRoutes from './src/routes/applicationsRoutes.js';
 
 import { errorHandler } from './src/middleware/errorHandler.js';
 
@@ -32,6 +33,7 @@ app.use('/api/users/trakingoperaciones', TrakingOperacionesDeCasosRoutes);  // K
 app.use('/api/users/comision', comisionRoutes); // KardexDB ---> comision
 app.use('/api/users/multas', multaRoutes); // KardexDB ---> comision
 app.use('/api/users/attendance', attendanceRoutes); // KardexDB ---> Asistencia
+app.use('/api/users/applications', applicationsRoutes);// KardexDB ---> comision
 
 // const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

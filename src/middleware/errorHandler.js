@@ -1,7 +1,4 @@
-const errorHandler = (err, req, res, next) => {
-    // Loguear el error (puedes usar un sistema de logging aquí)
-    console.error(err.stack);
-  
+const errorHandler = (err, req, res, next) => {      
     // Definir la respuesta por defecto
     const statusCode = err.status || 500;
     const message = err.message || 'Internal Server Error';
