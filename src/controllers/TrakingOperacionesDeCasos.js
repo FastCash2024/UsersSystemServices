@@ -40,6 +40,7 @@ export const getTrackings = async (req, res) => {
     const totalPages = Math.ceil(totalDocuments / limit);
 
     const records = await TrakingOperacionesDeCasos.find(filter)
+      .sort({ _id: -1 })
       .limit(parseInt(limit))
       .skip((parseInt(page) - 1) * parseInt(limit));
 
@@ -50,10 +51,10 @@ export const getTrackings = async (req, res) => {
       totalDocuments,
     });
   } catch (error) {
-    res.status(500).json({ message: "Error al obtener los registros.".error.message });
+    console.error("Error al obtener tracking:", error);
+    res.status(500).json({ message: "Error al obtener los registros." });
   }
 };
-
 
 export const updateTrackingById = async (req, res) => {
   try {
