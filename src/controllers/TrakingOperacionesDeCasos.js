@@ -1,3 +1,4 @@
+import moment from 'moment';
 import TrakingOperacionesDeCasos from '../models/TrakingOperacionesDeCasos.js';
 
 export const createTrackings = async (req, res) => {
@@ -25,16 +26,20 @@ export const createTracking = async (tracking) => {
 
 export const getTrackings = async (req, res) => {
   try {
-    const { caso, asesor, cuenta, fecha, limit = 10, page = 1 } = req.query;
+    const { cuentaOperadora, cuentaPersonal, fechaDeOperacion, limit = 10, page = 1 } = req.query;
 
     const filter = {};
-    if (asesor) filter.asesor = { $regex: asesor, $options: "i" };
-    if (cuenta) filter.cuenta = { $regex: cuenta, $options: "i" };
-    if (caso) {
-      filter.numeroDePrestamo = { $regex: caso, $options: "i" };
-    }
+    if (cuentaOperadora) filter.cuentaOperadora = { $regex: cuentaOperadora, $options: "i" };
+    if (cuentaPersonal) filter.cuentaPersonal = { $regex: cuentaPersonal, $options: "i" };
 
-    if (fecha) filter.fecha = fecha;
+    if (fechaDeOperacion) {
+      const fechaInicio = moment(fechaDeOperacion).startOf('day').toISOString();
+      const fechaFin = moment(fechaDeOperacion).endOf('day').toISOString();
+      filter.fechaDeOperacion = {
+        $gte: fechaInicio,
+        $lte: fechaFin
+      };
+    }
 
     const totalDocuments = await TrakingOperacionesDeCasos.countDocuments(filter);
     const totalPages = Math.ceil(totalDocuments / limit);

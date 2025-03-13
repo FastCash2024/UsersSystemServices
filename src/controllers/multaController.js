@@ -113,6 +113,7 @@ export const getAllMultas = async (req, res) => {
         const totalDocuments = await MultaCollection.countDocuments(filter);
 
         const multas = await MultaCollection.find(filter)
+            .sort({_id: -1})
             .skip((pageInt - 1) * limitInt)
             .limit(limitInt);
 
@@ -197,5 +198,85 @@ export const getReporteDiarioMultas = async (req, res) => {
         res.json({ data: resultado });
     } catch (error) {
         res.status(500).json({ message: 'Error al obtener los datos'.error.message });
+    }
+};
+
+export const getReporteDiarioTotalesMultas = async (req, res) => {
+    try {
+        const { fecha } = req.query;
+        const today = fecha || moment().format('DD/MM/YYYY');
+
+        const filter = {
+            $expr: {
+                $eq: [
+                    {
+                        $dateToString: {
+                            format: '%d/%m/%Y',
+                            date: { $toDate: '$fechaDeAuditoria' },
+                        },
+                    },
+                    today,
+                ],
+            },
+        };
+
+        const multasDelDia = await MultaCollection.find(filter);
+
+        if (multasDelDia.length === 0) {
+            return res.json({
+                data: {
+                    totalesGenerales: {
+                        multados10am: 0,
+                        multados12am: 0,
+                        multados14pm: 0,
+                        multados16pm: 0,
+                        multadosTotal: 0,
+                        sinMulta10am: 0,
+                        sinMulta12am: 0,
+                        sinMulta14pm: 0,
+                        sinMulta16pm: 0,
+                        sinMultaTotal: 0
+                    },
+                },
+                message: `No se encontraron multas del día ${today}.`,
+            });
+        }
+
+        // Inicializamos los totales generales
+        const totalesGenerales = {
+            multados10am: 0,
+            multados12am: 0,
+            multados14pm: 0,
+            multados16pm: 0,
+            multadosTotal: 0,
+            sinMulta10am: 0,
+            sinMulta12am: 0,
+            sinMulta14pm: 0,
+            sinMulta16pm: 0,
+            sinMultaTotal: 0
+        };
+
+        multasDelDia.forEach((multa) => {
+            const observacion = multa.observaciones || 'Sin Observaciones';
+            const esMultado = observacion === 'Con Observaciones';
+
+            const hora = new Date(multa.fechaDeAuditoria).getUTCHours();
+
+            if (hora <= 10) {
+                esMultado ? totalesGenerales.multados10am++ : totalesGenerales.sinMulta10am++;
+            } else if (hora > 10 && hora <= 12) {
+                esMultado ? totalesGenerales.multados12am++ : totalesGenerales.sinMulta12am++;
+            } else if (hora > 12 && hora <= 14) {
+                esMultado ? totalesGenerales.multados14pm++ : totalesGenerales.sinMulta14pm++;
+            } else if (hora > 14 && hora <= 16) {
+                esMultado ? totalesGenerales.multados16pm++ : totalesGenerales.sinMulta16pm++;
+            }
+
+            esMultado ? totalesGenerales.multadosTotal++ : totalesGenerales.sinMultaTotal++;
+        });
+
+        res.json({ totalesGenerales });
+    } catch (error) {
+        res.status(500).json({ message: 'Error al obtener los datos', error: error.message });
     }
 };
