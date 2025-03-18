@@ -8,11 +8,9 @@ import multaRoutes from './src/routes/multaRoutes.js';
 import attendanceRoutes from './src/routes/attendanceRoutes.js';
 import comisionRoutes from './src/routes/comisionRoutes.js';
 import applicationsRoutes from './src/routes/applicationsRoutes.js';
-
+import hourEntryRoutes from './src/routes/horEntryRoutes.js';
 import { errorHandler } from './src/middleware/errorHandler.js';
-
 import bodyParser from  'body-parser';
-import twilio from 'twilio';
 import path from 'path';
 import { fileURLToPath } from 'url'; // Asegúrate de importar fileURLToPath
 
@@ -21,7 +19,6 @@ const app = express();
 app.use(bodyParser.json());
 
 app.use(cors());
-const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
 // Conectar a MongoDB
 connectDB();
@@ -34,6 +31,7 @@ app.use('/api/users/comision', comisionRoutes); // KardexDB ---> comision
 app.use('/api/users/multas', multaRoutes); // KardexDB ---> comision
 app.use('/api/users/attendance', attendanceRoutes); // KardexDB ---> Asistencia
 app.use('/api/users/applications', applicationsRoutes);// KardexDB ---> comision
+app.use('/api/users/entryhour', hourEntryRoutes);
 
 // const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
