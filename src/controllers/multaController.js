@@ -1,5 +1,6 @@
 import moment from "moment";
 import MultaCollection from "../models/MultaCollection.js";
+import { obtenerFechaMexicoISO } from "../utilities/date.js";
 
 export const addMulta = async (req, res) => {
     try {
@@ -180,19 +181,28 @@ export const getReporteDiarioMultas = async (req, res) => {
                 };
             }
 
-            const hora = new Date(multa.fechaDeAuditoria).getUTCHours();
+            const hora = obtenerFechaMexicoISO(multa.fechaDeAuditoria);
 
-            if (hora <= 10) {
+            if (hora >= 7 && hora <= 10) {
                 esMultado ? resultado[tipo].multados10am++ : resultado[tipo].sinMulta10am++;
             } else if (hora > 10 && hora <= 12) {
                 esMultado ? resultado[tipo].multados12am++ : resultado[tipo].sinMulta12am++;
             } else if (hora > 12 && hora <= 14) {
                 esMultado ? resultado[tipo].multados14pm++ : resultado[tipo].sinMulta14pm++;
-            } else if (hora > 14 && hora <= 16) {
+            } else if (hora > 14 && hora < 24) {
                 esMultado ? resultado[tipo].multados16pm++ : resultado[tipo].sinMulta16pm++;
             }
 
             esMultado ? resultado[tipo].multadosTotal++ : resultado[tipo].sinMultaTotal++;
+        });
+
+        Object.keys(resultado).forEach((tipo) => {
+            resultado[tipo].multados12am += resultado[tipo].multados10am;
+            resultado[tipo].multados14pm += resultado[tipo].multados12am;
+            resultado[tipo].multados16pm += resultado[tipo].multados14pm;
+            resultado[tipo].sinMulta12am += resultado[tipo].sinMulta10am;
+            resultado[tipo].sinMulta14pm += resultado[tipo].sinMulta12am;
+            resultado[tipo].sinMulta16pm += resultado[tipo].sinMulta14pm;
         });
 
         res.json({ data: resultado });
@@ -260,20 +270,28 @@ export const getReporteDiarioTotalesMultas = async (req, res) => {
             const observacion = multa.observaciones || 'Sin Observaciones';
             const esMultado = observacion === 'Con Observaciones';
 
-            const hora = new Date(multa.fechaDeAuditoria).getUTCHours();
+            const hora = obtenerFechaMexicoISO(multa.fechaDeAuditoria);
 
-            if (hora <= 10) {
+            if (hora >= 7 && hora <= 10) {
                 esMultado ? totalesGenerales.multados10am++ : totalesGenerales.sinMulta10am++;
             } else if (hora > 10 && hora <= 12) {
                 esMultado ? totalesGenerales.multados12am++ : totalesGenerales.sinMulta12am++;
             } else if (hora > 12 && hora <= 14) {
                 esMultado ? totalesGenerales.multados14pm++ : totalesGenerales.sinMulta14pm++;
-            } else if (hora > 14 && hora <= 16) {
+            } else if (hora > 14 && hora < 24) {
                 esMultado ? totalesGenerales.multados16pm++ : totalesGenerales.sinMulta16pm++;
             }
 
             esMultado ? totalesGenerales.multadosTotal++ : totalesGenerales.sinMultaTotal++;
         });
+
+        totalesGenerales.multados12am += totalesGenerales.multados10am;
+        totalesGenerales.multados14pm += totalesGenerales.multados12am;
+        totalesGenerales.multados16pm += totalesGenerales.multados14pm;
+
+        totalesGenerales.sinMulta12am += totalesGenerales.sinMulta10am;
+        totalesGenerales.sinMulta14pm += totalesGenerales.sinMulta12am;
+        totalesGenerales.sinMulta16pm += totalesGenerales.sinMulta14pm;
 
         res.json({ totalesGenerales });
     } catch (error) {
