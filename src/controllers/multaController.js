@@ -134,14 +134,23 @@ export const getAllMultas = async (req, res) => {
 export const getReporteDiarioMultas = async (req, res) => {
     try {
         const { fecha } = req.query;
-        const today = fecha || moment().format('DD/MM/YYYY');
+
+        const fechaHoy = new Date();
+        const opciones = { timeZone: 'America/Mexico_City' };
+    
+        // Obtener los valores por separado y formatearlos
+        const dia = fechaHoy.toLocaleDateString('es-MX', opciones).split('/')[0].padStart(2, '0');
+        const mes = fechaHoy.toLocaleDateString('es-MX', opciones).split('/')[1].padStart(2, '0');
+        const anio = fechaHoy.toLocaleDateString('es-MX', opciones).split('/')[2];
+    
+        const today = fecha || `${anio}-${mes}-/${dia}`;
 
         const filter = {
             $expr: {
                 $eq: [
                     {
                         $dateToString: {
-                            format: '%d/%m/%Y',
+                            format: '%Y-%m-%d',
                             date: { $toDate: '$fechaDeAuditoria' },
                         },
                     },
@@ -214,14 +223,22 @@ export const getReporteDiarioMultas = async (req, res) => {
 export const getReporteDiarioTotalesMultas = async (req, res) => {
     try {
         const { fecha } = req.query;
-        const today = fecha || moment().format('DD/MM/YYYY');
+        const fechaHoy = new Date();
+        const opciones = { timeZone: 'America/Mexico_City' };
+    
+        // Obtener los valores por separado y formatearlos
+        const dia = fechaHoy.toLocaleDateString('es-MX', opciones).split('/')[0].padStart(2, '0');
+        const mes = fechaHoy.toLocaleDateString('es-MX', opciones).split('/')[1].padStart(2, '0');
+        const anio = fechaHoy.toLocaleDateString('es-MX', opciones).split('/')[2];
+    
+        const today = fecha || `${anio}-${mes}-/${dia}`;
 
         const filter = {
             $expr: {
                 $eq: [
                     {
                         $dateToString: {
-                            format: '%d/%m/%Y',
+                            format: '%Y-%m-%d',
                             date: { $toDate: '$fechaDeAuditoria' },
                         },
                     },
