@@ -34,7 +34,7 @@ export const getComisiones = async (req, res) => {
             totalDocuments,
         });
     } catch (error) {
-        res.status(500).json({ message: `Error al obtener comisiones: ${error.message}` });
+        res.status(500).json({ message: `Error al obtener las asistencias del usuario: ${error.message}` });
     }
 };
 
