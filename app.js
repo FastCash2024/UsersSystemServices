@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 
 import TrakingOperacionesDeCasosRoutes from './src/routes/TrakingOperacionesDeCasosRoutes.js';
+import ComisionVerificationRoutes from './src/routes/comisionVerificationRoutes.js';
 import multaRoutes from './src/routes/multaRoutes.js';
 import attendanceRoutes from './src/routes/attendanceRoutes.js';
 import comisionRoutes from './src/routes/comisionRoutes.js';
@@ -27,6 +28,7 @@ app.use(express.json({ limit: '100mb' })); // Ajusta el límite según el tamañ
 app.use(express.urlencoded({ limit: '100mb', extended: true }));
 // Rutas
 app.use('/api/users/trakingoperaciones', TrakingOperacionesDeCasosRoutes);  // KardexDB ---> comision
+app.use('/api/users/comisionVerification', ComisionVerificationRoutes);  // KardexDB ---> comision
 app.use('/api/users/comision', comisionRoutes); // KardexDB ---> comision
 app.use('/api/users/multas', multaRoutes); // KardexDB ---> comision
 app.use('/api/users/attendance', attendanceRoutes); // KardexDB ---> Asistencia
