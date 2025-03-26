@@ -199,13 +199,13 @@ export const registerAttendance = async (req, res) => {
         const horaSalida = '18:00'
 
         const horaLimite2 = new Date(fechaHoy);
-        horaLimite2.setHours(8, 15, 0, 0); // 8:15 AM
+        horaLimite2.setHours(8, 5, 0, 0); // 8:15 AM
 
         const horaLimite3 = new Date(fechaHoy);
-        horaLimite3.setHours(8, 25, 0, 0); // 8:25 AM
+        horaLimite3.setHours(8, 10, 0, 0); // 8:25 AM
 
         const horaLimite4 = new Date(fechaHoy);
-        horaLimite4.setHours(8, 30, 0, 0); // 8:30 AM
+        horaLimite4.setHours(8, 15, 0, 0); // 8:30 AM
 
         let estadoDeAsistencia;
 

@@ -3,8 +3,7 @@ import { getEntryTimeForToday, registerEntryTime } from '../controllers/HourEntr
 
 const router = express.Router();
 
-// Registrar hora de entrada
-router.post('/register', registerEntryTime);
+router.put('/register', registerEntryTime);
 
 router.get('/gethour', getEntryTimeForToday);
 
