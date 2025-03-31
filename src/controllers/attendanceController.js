@@ -34,7 +34,7 @@ const getUserAttendance = async (userId, start, end) => {
 export const getUsersAttendance = async (req, res) => {
     try {
         const { startDate, endDate, usuario, tipoDeGrupo } = req.query;
-      
+
         let start, end;
         if (startDate && endDate) {
             start = new Date(startDate);
@@ -49,13 +49,14 @@ export const getUsersAttendance = async (req, res) => {
             throw new Error("Las fechas de inicio y fin no están definidas");
         }
 
-        const userFilter = {};
+        const userFilter = { tipoDeGrupo: { $ne: "Super Admin" } }; // Excluir "Super Admin"
+
         if (usuario) {
             userFilter.cuenta = { $regex: usuario, $options: "i" };
         }
 
         if (tipoDeGrupo) {
-            userFilter.tipoDeGrupo = { $regex: tipoDeGrupo, $options: "i" }; // Insensible a mayúsculas
+            userFilter.tipoDeGrupo = { $regex: tipoDeGrupo, $options: "i" };
         }
 
         const users = await User.find(userFilter).lean();
@@ -83,14 +84,14 @@ export const getUsersAttendanceById = async (req, res) => {
     try {
         const { user } = req.params;
         const { page = 1, limit = 52
-            
-         } = req.query;
+
+        } = req.query;
 
         const limitInt = parseInt(limit, 10);
-        const pageInt = parseInt(page, 10);       
-        
+        const pageInt = parseInt(page, 10);
+
         const userRecord = await User.find({ cuenta: user }).lean();
-        
+
         if (!userRecord) {
             return res.status(404).json({ message: 'Usuario no encontrado' });
         }
@@ -169,7 +170,7 @@ export const registerAttendance = async (req, res) => {
         let user = await User.findById(userId);
         if (!user) {
             user = await UserSchema.findById(userId);
-            if(!user){
+            if (!user) {
                 return res.status(404).json({
                     error: "Usuario no encontrado",
                 });
