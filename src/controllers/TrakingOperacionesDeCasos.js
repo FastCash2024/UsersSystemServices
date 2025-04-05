@@ -22,8 +22,6 @@ export const createTracking = async (tracking) => {
   }
 };
 
-
-
 export const getTrackings = async (req, res) => {
   try {
     const { cuentaOperadora, cuentaPersonal, fechaDeOperacion, limit = 10, page = 1 } = req.query;

@@ -12,7 +12,6 @@ export const createComisionVerification = async (req, res) => {
     }
 };
 
-
 export const getAllComisionVerification = async (req, res) => {
     try {
         const comisiones = await ComisionVerificationCollection.find();
@@ -21,7 +20,6 @@ export const getAllComisionVerification = async (req, res) => {
         res.status(500).json({ message: 'Error al obtener las comisiones.', details: error.message });
     }
 };
-
 
 export const getComisionVerification = async (req, res) => {
     try {
@@ -34,7 +32,6 @@ export const getComisionVerification = async (req, res) => {
         res.status(500).json({ message: 'Error al obtener la comisión.', details: error.message });
     }
 };
-
 
 export const updateComisionVerificationById = async (req, res) => {
     try {
@@ -52,7 +49,6 @@ export const updateComisionVerificationById = async (req, res) => {
         res.status(500).json({ message: 'Error al actualizar la comisión.', details: error.message });
     }
 };
-
 
 export const deleteComisionVerificationById = async (req, res) => {
     try {

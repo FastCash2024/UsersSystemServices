@@ -269,7 +269,6 @@ export const getReporteDiarioTotalesMultas = async (req, res) => {
             });
         }
 
-        // Inicializamos los totales generales
         const totalesGenerales = {
             multados10am: 0,
             multados12am: 0,
